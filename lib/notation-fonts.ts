@@ -1,6 +1,8 @@
+import { withBasePath } from "@/lib/base-path";
+
 /** Load Bravura before any staff draws. A 404 or hang is a hard fail. */
 
-const BRAVURA_URL = "/fonts/bravura.woff2";
+const BRAVURA_URL = withBasePath("/fonts/bravura.woff2");
 const LOAD_MS = 5000;
 
 let ready: Promise<void> | null = null;
