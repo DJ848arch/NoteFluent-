@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { notationFontsReady } from "@/lib/notation-fonts";
 import { assertStaffDrawn } from "@/lib/staff-drawn";
 import type { ScoreSpec } from "@/lib/types";
 
@@ -12,6 +13,16 @@ type StaffProps = ScoreSpec & {
 
 function voiceTimeFor(spec: ScoreSpec) {
   return spec.voiceTime ?? spec.time ?? "4/4";
+}
+
+function pinSvgSize(el: HTMLDivElement, width: number, height: number) {
+  const svg = el.querySelector("svg");
+  if (!(svg instanceof SVGSVGElement)) return;
+  svg.setAttribute("width", String(width));
+  svg.setAttribute("height", String(height));
+  svg.style.width = `${width}px`;
+  svg.style.height = `${height}px`;
+  svg.style.maxWidth = "none";
 }
 
 async function renderScore(
@@ -47,6 +58,7 @@ async function renderScore(
     if (spec.keySignature) stave.addKeySignature(spec.keySignature);
     if (spec.time) stave.addTimeSignature(spec.time);
     vf.draw();
+    pinSvgSize(el, width, height);
     return;
   }
 
@@ -112,6 +124,7 @@ async function renderScore(
   if (spec.time) stave.addTimeSignature(spec.time);
 
   vf.draw();
+  pinSvgSize(el, width, height);
 }
 
 export function Staff({ caption, className, ...spec }: StaffProps) {
@@ -133,12 +146,25 @@ export function Staff({ caption, className, ...spec }: StaffProps) {
 
     const draw = async () => {
       if (cancelled || !host.isConnected) return;
-      const width = Math.max(Math.floor(wrap.clientWidth) || 0, 280);
       try {
-        await renderScore(host, parsed, width);
+        await notationFontsReady();
         if (cancelled || !host.isConnected) return;
-        assertStaffDrawn(host, parsed);
-        setFailed(false);
+        const inner = Math.floor(wrap.clientWidth - 16);
+        const width = Math.max(inner > 0 ? inner : Math.floor(wrap.clientWidth) || 0, 280);
+        let lastError: unknown;
+        for (let attempt = 0; attempt < 4; attempt++) {
+          await renderScore(host, parsed, width);
+          if (cancelled || !host.isConnected) return;
+          try {
+            assertStaffDrawn(host, parsed);
+            setFailed(false);
+            return;
+          } catch (error) {
+            lastError = error;
+            await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+          }
+        }
+        throw lastError;
       } catch (error) {
         console.error("Failed to render staff", error);
         if (!cancelled) setFailed(true);
@@ -157,12 +183,6 @@ export function Staff({ caption, className, ...spec }: StaffProps) {
     const observer = new ResizeObserver(schedule);
     observer.observe(wrap);
 
-    const redrawWhenFontsLoad = () => {
-      if (!cancelled) schedule();
-    };
-    void document.fonts.load("16px Bravura").then(redrawWhenFontsLoad);
-    void document.fonts.load("16px Academico").then(redrawWhenFontsLoad);
-
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
@@ -174,7 +194,7 @@ export function Staff({ caption, className, ...spec }: StaffProps) {
     <figure className={cn("staff-figure my-4", className)}>
       <div
         ref={wrapRef}
-        className="staff-paper relative overflow-x-auto rounded-lg px-2 py-1"
+        className="staff-paper relative overflow-x-auto rounded-lg px-2 py-3"
       >
         <div
           id={elementId}

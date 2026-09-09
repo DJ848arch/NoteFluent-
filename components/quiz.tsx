@@ -95,7 +95,7 @@ export function Quiz({ slug, questions }: QuizProps) {
   return (
     <section
       aria-labelledby="try-it-heading"
-      className="mt-12 rounded-2xl border border-border bg-card p-5 sm:p-8"
+      className="mt-12 scroll-mt-20 rounded-2xl border border-border bg-card p-5 sm:p-8"
     >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>

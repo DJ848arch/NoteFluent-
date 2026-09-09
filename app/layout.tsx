@@ -31,6 +31,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${heading.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <link
+          rel="preload"
+          href="/fonts/bravura.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/academico.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
@@ -38,8 +52,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <div className="font-preload" aria-hidden>
-          <span style={{ fontFamily: "Bravura" }}>.</span>
-          <span style={{ fontFamily: "Academico" }}>.</span>
+          <span style={{ fontFamily: "Bravura" }}>{"\uE050"}</span>
+          <span style={{ fontFamily: "Academico" }}>4</span>
         </div>
         <SiteHeader />
         <main id="main" className="flex flex-1 flex-col">
