@@ -2,12 +2,15 @@
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import {
+  LEGACY_PROGRESS_KEY,
   parseProgress,
   PROGRESS_EVENT,
   PROGRESS_KEY,
+  recordPracticeAttempt,
   resetProgress,
   saveLessonScore,
   type LessonScore,
+  type PracticeLevelId,
   type ProgressState,
 } from "@/lib/progress";
 import { lessons } from "@/lib/curriculum";
@@ -24,7 +27,11 @@ function subscribe(onChange: () => void) {
 }
 
 function getSnapshot() {
-  return localStorage.getItem(PROGRESS_KEY) ?? EMPTY;
+  return (
+    localStorage.getItem(PROGRESS_KEY) ??
+    localStorage.getItem(LEGACY_PROGRESS_KEY) ??
+    EMPTY
+  );
 }
 
 function getServerSnapshot() {
@@ -52,6 +59,18 @@ export function useProgress() {
     []
   );
 
+  const recordAttempt = useCallback(
+    (input: {
+      level: PracticeLevelId;
+      pitch: string;
+      letter: string;
+      correct: boolean;
+    }) => {
+      recordPracticeAttempt(input);
+    },
+    []
+  );
+
   const reset = useCallback(() => {
     resetProgress();
   }, []);
@@ -63,6 +82,7 @@ export function useProgress() {
     nextLesson,
     continueSlug,
     saveScore,
+    recordAttempt,
     reset,
   };
 }
