@@ -1,6 +1,7 @@
 import { Fraunces, Source_Sans_3 } from "next/font/google";
 import type { Metadata } from "next";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import { withBasePath } from "@/lib/base-path";
 import "./globals.css";
 
 const heading = Fraunces({
@@ -31,16 +32,28 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${heading.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <style>{`
+          @font-face {
+            font-family: "Bravura";
+            src: url("${withBasePath("/fonts/bravura.woff2")}") format("woff2");
+            font-display: block;
+          }
+          @font-face {
+            font-family: "Academico";
+            src: url("${withBasePath("/fonts/academico.woff2")}") format("woff2");
+            font-display: swap;
+          }
+        `}</style>
         <link
           rel="preload"
-          href="/fonts/bravura.woff2"
+          href={withBasePath("/fonts/bravura.woff2")}
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/academico.woff2"
+          href={withBasePath("/fonts/academico.woff2")}
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
