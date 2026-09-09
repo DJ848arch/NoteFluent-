@@ -83,7 +83,8 @@ export default function LessonsPage() {
       <div className="mt-12 rounded-2xl border border-border px-5 py-5">
         <h2 className="font-heading text-lg font-medium">Reset this browser</h2>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-          Clears lesson checks stored in localStorage on this device.
+          Clears lesson checks and practice attempts stored in localStorage on
+          this device.
         </p>
         <Button
           type="button"
@@ -92,7 +93,7 @@ export default function LessonsPage() {
           onClick={() => {
             if (
               window.confirm(
-                "Clear all saved lesson progress in this browser?"
+                "Clear all saved lesson and practice progress in this browser?"
               )
             ) {
               reset();

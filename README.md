@@ -17,6 +17,18 @@ Notation is drawn with [VexFlow](https://www.vexflow.com/), not fake CSS notehea
 
 Each lesson has a short “try it” check at the end. Progress is stored in `localStorage` in this browser. No account.
 
+## Practice
+
+`/practice` (also `/practice/notes`) is a separate reading-fluency drill — not more lessons. One whole note on a real VexFlow treble staff; name the letter; immediate feedback; next note.
+
+Pitch set (narrow treble, no ledger lines or accidentals): **G4, A4, B4, C5, D5**.
+
+### Progress storage
+
+- Current key: `as-written-progress-v2` (`version: 2`). Lessons (`completed`, `scores`, `lastSlug`) stay intact.
+- Legacy key: `as-written-progress-v1` is still read on load so existing lesson completions migrate.
+- Practice fields: `attempts`, `correct`, `accuracy`, `currentLevel` (`treble-narrow`), `session`, `personalBest` (accuracy after 10+ attempts, best session correct count), and a 30-item `recent` window for a later “You’re improving” view. No streaks or coins.
+
 ## Run locally
 
 Requires Node.js 20+.
