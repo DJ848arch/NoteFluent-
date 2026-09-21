@@ -4,7 +4,7 @@ import { PracticeNotes } from "@/components/practice-notes";
 export const metadata: Metadata = {
   title: "Practice",
   description:
-    "Name notes on a narrow treble range. Immediate feedback, then the next note.",
+    "Practice reading treble and bass clef notes with immediate feedback and saved progress.",
 };
 
 export default function PracticePage() {

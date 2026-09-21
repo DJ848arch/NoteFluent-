@@ -10,10 +10,10 @@ import {
   resetProgress,
   saveLessonScore,
   type LessonScore,
-  type PracticeLevelId,
   type ProgressState,
 } from "@/lib/progress";
 import { lessons } from "@/lib/curriculum";
+import type { PracticeLevelId } from "@/lib/practice-notes";
 
 const EMPTY = "{}";
 

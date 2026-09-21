@@ -6,7 +6,7 @@ const pagesBasePath = "/NoteFluent-";
 // use the GitHub Pages project subpath.
 const basePath =
   process.env.NEXT_PUBLIC_BASE_PATH ??
-  (process.env.NODE_ENV === "development" ? "" : pagesBasePath);
+  (process.env.GITHUB_ACTIONS === "true" ? pagesBasePath : "");
 
 const nextConfig: NextConfig = {
   output: "export",

@@ -1,4 +1,8 @@
-import { PRACTICE_LEVEL_NARROW_TREBLE } from "@/lib/practice-notes";
+import {
+  isPracticeLevelId,
+  PRACTICE_LEVEL_NARROW_TREBLE,
+  type PracticeLevelId,
+} from "@/lib/practice-notes";
 
 /** M1 lesson-only store. Still read on load so completions are not lost. */
 export const LEGACY_PROGRESS_KEY = "as-written-progress-v1";
@@ -16,8 +20,6 @@ export type LessonScore = {
   answers: Record<string, string | number>;
   checkedAt: number;
 };
-
-export type PracticeLevelId = typeof PRACTICE_LEVEL_NARROW_TREBLE;
 
 export type PracticeAttemptRecord = {
   at: number;
@@ -137,7 +139,9 @@ function parsePractice(value: unknown): PracticeState {
         .filter(isRecord)
         .map((item): PracticeAttemptRecord => ({
           at: Math.floor(asFiniteNumber(item.at, Date.now())),
-          level: PRACTICE_LEVEL_NARROW_TREBLE,
+          level: isPracticeLevelId(item.level)
+            ? item.level
+            : PRACTICE_LEVEL_NARROW_TREBLE,
           pitch: typeof item.pitch === "string" ? item.pitch : "",
           letter: typeof item.letter === "string" ? item.letter : "",
           correct: Boolean(item.correct),
@@ -146,7 +150,9 @@ function parsePractice(value: unknown): PracticeState {
     : [];
 
   return {
-    currentLevel: PRACTICE_LEVEL_NARROW_TREBLE,
+    currentLevel: isPracticeLevelId(value.currentLevel)
+      ? value.currentLevel
+      : PRACTICE_LEVEL_NARROW_TREBLE,
     attempts,
     correct,
     accuracy,
